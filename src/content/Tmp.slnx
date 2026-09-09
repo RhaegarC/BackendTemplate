@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Tmp.Api/Tmp.Api.csproj" />
+  <Project Path="Tmp.Interface/Tmp.Interface.csproj" />
+  <Project Path="Tmp.Model/Tmp.Model.csproj" />
+  <Project Path="Tmp.Repository/Tmp.Repository.csproj" />
+  <Project Path="Tmp.Service/Tmp.Service.csproj" />
+</Solution>

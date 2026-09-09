@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "RhaegarC",
+  "classifications": [ "Web API", "Solution" ],
+  "identity": "Rg.Backend.Solution.Template",
+  "name": "ASP.Net Web API Backend Solution Template",
+  "shortName": "BackendSolution",
+  "sourceName": "Tmp",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  }
+}
