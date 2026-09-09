@@ -1,5 +1,6 @@
 using Tmp.Api;
 using Tmp.Api.MiddleWare;
+using Tmp.Interface.Service;
 using Tmp.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddOpenApi();
 
 // Register dependence
 builder.Services.RegistService();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AllowCORS();
 builder.Services.AddHealthChecks();
 
