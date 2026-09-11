@@ -1,6 +1,5 @@
 ﻿namespace Tmp.Api;
 
-using Tmp.Interface.Repository;
 using Tmp.Interface.Service;
 using Tmp.Model;
 using Tmp.Repository;
@@ -14,18 +13,20 @@ internal static class ServiceExt
         services.AddScoped<IUserService, UserService>();
 
         // Register repository
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddTmpPersistence();
 
         // Others
+        services.AddHttpContextAccessor();
 
         return services;
     }
 
     public static IServiceCollection AllowCORS(this IServiceCollection services)
     {
-        string originsStr = Environment.GetEnvironmentVariable(Constant.ConfigKey.AllowedOrigins)
+        var env = Environment.GetEnvironmentVariables();
+        string? originsStr = env[Constant.ConfigKey.AllowedOrigins]?.ToString()
             ?? throw new ArgumentNullException(nameof(originsStr));
-        string[] origins = originsStr.Split(',');
+        string[] origins = originsStr.Split(';');
         services.AddCors(options =>
         {
             options.AddPolicy(Constant.App.CORSPolicyName,

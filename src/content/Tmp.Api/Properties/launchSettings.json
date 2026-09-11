@@ -5,7 +5,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "http://localhost:5015",
+      "applicationUrl": "http://localhost:8080",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -14,9 +14,12 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "https://localhost:7054;http://localhost:5015",
+      "applicationUrl": "https://localhost:8086;http://localhost:8080",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DbConnection": "Server=localhost;Database=Tmp;Uid=postgres;Pwd=postgres;",
+        "TenantId": "3f18e889-b0e4-41ae-ad36-7d2f73d416ff",
+        "AllowedOrigins": "https://localhost:8086;http://localhost:8080"
       }
     }
   }

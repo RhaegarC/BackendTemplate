@@ -7,14 +7,14 @@ using Tmp.Model;
 
 public static class RepositoryRegistrationExtensions
 {
-    public static IServiceCollection AddFmsPersistence(this IServiceCollection services)
+    public static IServiceCollection AddTmpPersistence(this IServiceCollection services)
     {
         services.AddScoped<AuditSaveChangesInterceptor>();
 
         services.AddDbContext<TmpContext>((serviceProvider, options) =>
         {
             options.UseNpgsql(Config.DBConnection)
-                    .AddInterceptors(serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>()); ;
+                .AddInterceptors(serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>());
         });
 
         services.AddScoped<IUserRepository, UserRepository>();
