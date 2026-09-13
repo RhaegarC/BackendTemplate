@@ -18,7 +18,7 @@ Each finding is broken out into its own file, numbered in priority order.
 | 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](archive/IM-02-CORS.md) | Done |
 | 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](archive/IM-03-Credentials.md) | Done |
 | 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](archive/IM-04-Dockerfile.md) | Done |
-| 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](IM-05-AuthMiddleware.md) | Open |
+| 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](archive/IM-05-AuthMiddleware.md) | Done |
 | 6 | 🟠 High | Data | `CreateAsync(List<T>)` is fire-and-forget | [IM-06-BatchCreate.md](IM-06-BatchCreate.md) | Open |
 | 7 | 🟠 Medium | Layering | `Tmp.Repository` depends on `Tmp.Interface.Service` | [IM-07-Layering.md](IM-07-Layering.md) | Open |
 | 8 | 🟠 Medium | Design | Mutable ambient state on `IUserContextService` | [IM-08-UserContext.md](IM-08-UserContext.md) | Open |
@@ -43,7 +43,7 @@ finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workfl
 2. **[IM-02](archive/IM-02-CORS.md) and [IM-03](archive/IM-03-Credentials.md)** — fix the CORS separator
    and ports, and move credentials out of `launchSettings.json`. Both are small, and both
    are template-hygiene issues that propagate to every project generated from it.
-3. **[IM-05](IM-05-AuthMiddleware.md) and [IM-06](IM-06-BatchCreate.md)** — decide what
+3. **[IM-05](archive/IM-05-AuthMiddleware.md) and [IM-06](IM-06-BatchCreate.md)** — decide what
    authentication should be, and fix the fire-and-forget repository call.
 4. **[IM-04](archive/IM-04-Dockerfile.md), [IM-07](IM-07-Layering.md)–[IM-15](IM-15-Cleanup.md)**
    — build correctness and design cleanups.

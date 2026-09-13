@@ -2,8 +2,8 @@
 
 - **Priority:** 🟠 High
 - **Area:** Auth
-- **Status:** Open
-- **Index:** [improve.md](improve.md)
+- **Status:** Done
+- **Index:** [improve.md](../improve.md)
 
 ## Problem
 
@@ -27,4 +27,4 @@ that converts every failure into 401.
 
 ## Related
 
-- [IM-01](archive/IM-01-Audit.md) — the stub `UserContextService`
+- [IM-01](IM-01-Audit.md) — the stub `UserContextService`
