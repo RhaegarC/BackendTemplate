@@ -32,4 +32,11 @@
     <ProjectReference Include="..\Tmp.Service\Tmp.Service.csproj" />
   </ItemGroup>
 
+  <!-- ServiceExt and the CORS guard are internal to the composition root. The guard is
+       startup behaviour with no endpoint to call, so the tests reach the extension method
+       directly. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tmp.Tests" />
+  </ItemGroup>
+
 </Project>

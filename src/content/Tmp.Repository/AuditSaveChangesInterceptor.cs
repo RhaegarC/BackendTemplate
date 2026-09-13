@@ -152,7 +152,11 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         return values.Any(string.IsNullOrEmpty) ? null : string.Join("-", values);
     }
 
-    private string? SerializeEntity(EntityEntry entry, bool isOriginal)
+    /// <remarks>
+    /// <c>internal</c> rather than <c>private</c> so the test project can call it directly.
+    /// The type is itself internal, so this does not widen the assembly's public surface.
+    /// </remarks>
+    internal string? SerializeEntity(EntityEntry entry, bool isOriginal)
     {
         // Clone the entity's properties to a dictionary
         var properties = entry.Metadata.GetProperties()

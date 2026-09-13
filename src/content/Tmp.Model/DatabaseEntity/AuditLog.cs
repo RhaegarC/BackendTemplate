@@ -36,7 +36,9 @@ public sealed class AuditLog
     public string? EntityId { get; set; }
 
     /// <summary>
-    /// "INSERT", "UPDATE", "DELETE". Never null.
+    /// The <c>EntityState</c> that produced the entry: "Added", "Modified" or "Deleted".
+    /// Never null. Note that this is a soft delete's vocabulary too — clearing
+    /// <c>IsDeleted</c> is an update, and is recorded as "Modified".
     /// </summary>
     public required string Action { get; set; }
 

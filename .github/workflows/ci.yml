@@ -1,0 +1,75 @@
+name: CI
+
+# IM-15: nothing built or tested the solution, and nothing checked that the template
+# still generates one. The second job is the one that matters most -- the template's
+# rot (IM-04's stale Dockerfile path, base images, project names) is invisible to a
+# plain build of src/content, because those files are only ever exercised after
+# `dotnet new` has rewritten them.
+
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+    branches: [develop, master]
+
+  # Lets a run be started by hand from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and test the solution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: dotnet build src/content/Tmp.slnx --configuration Release
+
+      - name: Test
+        run: dotnet test src/content/Tmp.slnx --configuration Release --no-build
+
+  template:
+    name: Generate from the template and build the result
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # A custom hive keeps the runner's global template cache untouched, and makes
+      # the install visible to the generate step below rather than implicit.
+      - name: Pack and install the template
+        run: |
+          dotnet pack src/Rg.Templates.csproj --configuration Release --output ./artifacts
+          dotnet new --debug:custom-hive "$PWD/.template-hive" install ./artifacts/*.nupkg
+
+      # The name exercises the one thing a rename breaks: sourceName rewrites the
+      # project names in both paths and file contents, so "Contoso.Api" would come out
+      # as "Contoso.Api.Api" if the template's own naming were inconsistent.
+      - name: Generate a project
+        run: |
+          dotnet new --debug:custom-hive "$PWD/.template-hive" \
+            BackendSolution --name Contoso --output ./generated
+
+      - name: Build what was generated
+        run: dotnet build ./generated/Contoso.slnx --configuration Release
+
+      - name: Test what was generated
+        run: dotnet test ./generated/Contoso.slnx --configuration Release --no-build
+
+      # A leftover "Tmp" means sourceName missed a file the template ships -- a path that
+      # is not renamed, or content the rewriter does not reach. The generated project is
+      # checked rather than the package, because a name that survives generation is what
+      # the next user actually receives.
+      - name: Check the generated project carries no leftover template name
+        run: |
+          if grep -rIl --exclude-dir=bin --exclude-dir=obj 'Tmp' ./generated; then
+            echo "::error::Files above still reference the template's placeholder name."
+            exit 1
+          fi
