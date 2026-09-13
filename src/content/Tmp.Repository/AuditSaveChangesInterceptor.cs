@@ -26,27 +26,37 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         WriteIndented = false
     };
 
+    public override InterceptionResult<int> SavingChanges(
+        DbContextEventData eventData,
+        InterceptionResult<int> result)
+    {
+        Capture(eventData.Context);
+        return base.SavingChanges(eventData, result);
+    }
+
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        // Capture audit logs BEFORE save
-        var auditLogs = CaptureAuditLogs(eventData.Context);
+        Capture(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
 
-        // Add logs to the SAME context
-        if (eventData.Context is TmpContext dbContext)
+    /// <summary>
+    /// Captures the audit entries and adds them to the same context, so they are written in
+    /// the same transaction as the change they describe. Both save paths call this: a
+    /// synchronous <c>SaveChanges()</c> would otherwise bypass auditing in silence, which is
+    /// the kind of gap nobody notices until they need the history.
+    /// </summary>
+    private void Capture(DbContext? context)
+    {
+        if (context is not TmpContext dbContext)
         {
-            dbContext.AuditLogs.AddRange(auditLogs);
+            return;
         }
 
-        // Let the save happen
-        var saveResult = base.SavingChangesAsync(eventData, result, cancellationToken);
-
-        // 3. AFTER save, we now have the generated IDs (if any) - but AuditLog doesn't need them
-        // Optionally save audit logs in a separate transaction or after the main save
-
-        return saveResult;
+        dbContext.AuditLogs.AddRange(CaptureAuditLogs(context));
     }
 
     private List<AuditLog> CaptureAuditLogs(DbContext? context)
@@ -118,19 +128,35 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         return _currentUser.HasActiveRequest ? AnonymousActor : SystemActor;
     }
 
-    private string? GetPrimaryKeyValue(EntityEntry entry)
+    /// <summary>
+    /// The affected row's key, read before the save. That is only possible because keys are
+    /// application-assigned (<see cref="EntityBase.Id"/>), so an insert is as traceable as
+    /// an update — which is the opposite of what a database-generated key allows, since
+    /// there is nothing to read until after the save has already happened.
+    /// </summary>
+    private static string? GetPrimaryKeyValue(EntityEntry entry)
     {
         var key = entry.Metadata.FindPrimaryKey();
-        if (key == null) return null;
+        if (key == null)
+        {
+            return null;
+        }
 
-        var keyValues = key.Properties
+        var values = key.Properties
             .Select(p => entry.Property(p.Name).CurrentValue?.ToString())
-            .Where(v => v != null);
+            .ToArray();
 
-        return string.Join("-", keyValues);
+        // If any part is unset, report no key at all rather than a partial one. Joining
+        // whatever happened to be present would write "abc" for a two-part key whose
+        // second half is missing — a value that reads like a real id and is not one.
+        return values.Any(string.IsNullOrEmpty) ? null : string.Join("-", values);
     }
 
-    private string? SerializeEntity(EntityEntry entry, bool isOriginal)
+    /// <remarks>
+    /// <c>internal</c> rather than <c>private</c> so the test project can call it directly.
+    /// The type is itself internal, so this does not widen the assembly's public surface.
+    /// </remarks>
+    internal string? SerializeEntity(EntityEntry entry, bool isOriginal)
     {
         // Clone the entity's properties to a dictionary
         var properties = entry.Metadata.GetProperties()

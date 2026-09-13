@@ -1,8 +1,15 @@
 ﻿namespace Tmp.Model.DatabaseEntity;
 
-public class AuditLog
+/// <summary>
+/// One recorded change. Deliberately not an <see cref="EntityBase"/>: the history is
+/// append-only, so soft-delete and last-modified columns would describe something that
+/// cannot happen. <see cref="Timestamp"/> and <see cref="Actor"/> are this type's own
+/// audit columns. The key is application-assigned on the same terms as the rest of the
+/// model — see <see cref="EntityBase.Id"/>.
+/// </summary>
+public sealed class AuditLog
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// Entra Object ID of whoever made the change, or "system" for background work and
@@ -21,13 +28,17 @@ public class AuditLog
     public required string TableName { get; set; }
 
     /// <summary>
-    /// Primary key value (as string). Null for an insert whose key the database generates
-    /// — there is nothing to record until after the save completes. See IM-14.
+    /// Primary key value (as string) of the affected row, populated for inserts as well as
+    /// updates and deletes. Keys are application-assigned (see <see cref="EntityBase.Id"/>),
+    /// so the value exists before the save and an insert is as traceable as anything else.
+    /// Null only when the entity has no primary key, or a part of a composite one is unset.
     /// </summary>
     public string? EntityId { get; set; }
 
     /// <summary>
-    /// "INSERT", "UPDATE", "DELETE". Never null.
+    /// The <c>EntityState</c> that produced the entry: "Added", "Modified" or "Deleted".
+    /// Never null. Note that this is a soft delete's vocabulary too — clearing
+    /// <c>IsDeleted</c> is an update, and is recorded as "Modified".
     /// </summary>
     public required string Action { get; set; }
 

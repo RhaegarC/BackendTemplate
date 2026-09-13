@@ -2,8 +2,8 @@
 
 - **Priority:** 🟡 Low
 - **Area:** Model
-- **Status:** Open
-- **Index:** [improve.md](improve.md)
+- **Status:** Done
+- **Index:** [improve.md](../improve.md)
 
 ## Problem
 

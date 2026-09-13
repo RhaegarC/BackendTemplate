@@ -37,4 +37,4 @@ writes rather than recording them.
 ## Related
 
 - [IM-08](IM-08-UserContext.md) — mutable ambient state on `IUserContextService`
-- [IM-11](../IM-11-AuditSyncPath.md) — audit only covers the async save path
+- [IM-11](IM-11-AuditSyncPath.md) — audit only covers the async save path

@@ -2,8 +2,8 @@
 
 - **Priority:** 🟡 Low
 - **Area:** Correctness
-- **Status:** Open
-- **Index:** [improve.md](improve.md)
+- **Status:** Done
+- **Index:** [improve.md](../improve.md)
 
 ## Problem
 
@@ -21,4 +21,4 @@ go through one implementation.
 
 ## Related
 
-- [IM-01](archive/IM-01-Audit.md)
+- [IM-01](IM-01-Audit.md)

@@ -2,8 +2,8 @@
 
 - **Priority:** 🟡 Low
 - **Area:** Cleanup
-- **Status:** Open
-- **Index:** [improve.md](improve.md)
+- **Status:** Done
+- **Index:** [improve.md](../improve.md)
 
 ## Problem
 
@@ -15,4 +15,4 @@
 
 - Remove the unused constant, or map a Swagger UI if it is intended.
 - Add a test project and a CI workflow; the verification checklist in
-  [improve.md](improve.md) is a reasonable starting point for both.
+  [improve.md](../improve.md) is a reasonable starting point for both.

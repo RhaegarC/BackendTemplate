@@ -6,7 +6,6 @@ public static class Constant
     {
         public const string CORSPolicyName = "AllowSpecificOrigin";
         public const string HealthCheckUrl = "/health";
-        public const string SwaggerUrl = "/swagger";
     }
 
     public static class Message

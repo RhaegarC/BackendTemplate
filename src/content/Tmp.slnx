@@ -4,4 +4,5 @@
   <Project Path="Tmp.Model/Tmp.Model.csproj" />
   <Project Path="Tmp.Repository/Tmp.Repository.csproj" />
   <Project Path="Tmp.Service/Tmp.Service.csproj" />
+  <Project Path="Tmp.Tests/Tmp.Tests.csproj" />
 </Solution>
