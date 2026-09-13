@@ -12,8 +12,6 @@ public static class Constant
     public static class Message
     {
         public const string NoAllowedOrigins = "Allowed origins not configured. Set the 'AllowedOrigins' configuration value (comma-separated).";
-
-        public const string Unauthorized = "Unauthorized.";
     }
 
     public static class ConfigKey
@@ -21,6 +19,8 @@ public static class Constant
         public const string DBCon = "DbConnection";
         
         public const string TenantId = "TenantId";
+
+        public const string Audience = "Audience";
         
         public const string AllowedOrigins = "AllowedOrigins";
     }

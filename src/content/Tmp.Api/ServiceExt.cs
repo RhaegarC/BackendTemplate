@@ -1,5 +1,7 @@
 ﻿namespace Tmp.Api;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Tmp.Interface.Service;
 using Tmp.Model;
 using Tmp.Repository;
@@ -23,6 +25,50 @@ internal static class ServiceExt
 
         // Others
         services.AddHttpContextAccessor();
+
+        return services;
+    }
+
+    /// <summary>Registers Entra ID bearer-token authentication. The scheme is wired only
+    /// when <see cref="Constant.ConfigKey.TenantId"/> and
+    /// <see cref="Constant.ConfigKey.Audience"/> are both present, so a project that has
+    /// not been pointed at a tenant still starts for /health and OpenAPI. Until then every
+    /// request is anonymous — <c>Program</c> logs a warning at startup saying so.</summary>
+    /// <param name="services">The service collection to register into.</param>
+    /// <param name="configuration">Resolved by the composition root from configuration.</param>
+    public static IServiceCollection AddEntraAuthentication(
+        this IServiceCollection services, IConfiguration configuration)
+    {
+        string? tenantId = configuration[Constant.ConfigKey.TenantId];
+        string? audience = configuration[Constant.ConfigKey.Audience];
+
+        if (string.IsNullOrWhiteSpace(tenantId) || string.IsNullOrWhiteSpace(audience))
+        {
+            // No scheme, but these still register what UseAuthentication and
+            // UseAuthorization need in order to run.
+            services.AddAuthentication();
+            services.AddAuthorization();
+            return services;
+        }
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                // v2.0 metadata also validates the issuer, so ValidateIssuer needs no
+                // separate ValidIssuer. No client secret: validating inbound tokens only
+                // needs the public signing keys that Authority serves.
+                options.Authority = $"https://login.microsoftonline.com/{tenantId}/v2.0";
+                options.Audience = audience;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                };
+            });
+
+        services.AddAuthorization();
 
         return services;
     }
