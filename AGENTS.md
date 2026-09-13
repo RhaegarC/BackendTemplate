@@ -42,3 +42,11 @@ This project is indexed by GitNexus as **BackendTemplate** (132 symbols, 177 rel
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus-cli/SKILL.md` |
 
 <!-- gitnexus:end -->
+
+## Git workflow
+
+Follow the six-step branch lifecycle in [doc/git-workflow.md](doc/git-workflow.md) for every
+implementation or bug fix: branch from `develop`, make the change, commit locally and wait for
+review, push and PR into `develop`, then sync `develop` and delete the local branch.
+
+Never commit directly to `develop` or `master`.
