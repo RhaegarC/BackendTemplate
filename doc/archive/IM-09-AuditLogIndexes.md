@@ -2,8 +2,8 @@
 
 - **Priority:** 🟠 Medium
 - **Area:** Data
-- **Status:** Open
-- **Index:** [improve.md](improve.md)
+- **Status:** Done
+- **Index:** [improve.md](../improve.md)
 
 ## Problem
 
@@ -20,4 +20,4 @@ Reintroduce `OnModelCreating` in `TmpContext` for this configuration.
 
 ## Related
 
-- [IM-13](IM-13-SoftDelete.md) — also configured there
+- [IM-13](../IM-13-SoftDelete.md) — also configured there
