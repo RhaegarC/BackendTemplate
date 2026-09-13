@@ -26,27 +26,37 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         WriteIndented = false
     };
 
+    public override InterceptionResult<int> SavingChanges(
+        DbContextEventData eventData,
+        InterceptionResult<int> result)
+    {
+        Capture(eventData.Context);
+        return base.SavingChanges(eventData, result);
+    }
+
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        // Capture audit logs BEFORE save
-        var auditLogs = CaptureAuditLogs(eventData.Context);
+        Capture(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
 
-        // Add logs to the SAME context
-        if (eventData.Context is TmpContext dbContext)
+    /// <summary>
+    /// Captures the audit entries and adds them to the same context, so they are written in
+    /// the same transaction as the change they describe. Both save paths call this: a
+    /// synchronous <c>SaveChanges()</c> would otherwise bypass auditing in silence, which is
+    /// the kind of gap nobody notices until they need the history.
+    /// </summary>
+    private void Capture(DbContext? context)
+    {
+        if (context is not TmpContext dbContext)
         {
-            dbContext.AuditLogs.AddRange(auditLogs);
+            return;
         }
 
-        // Let the save happen
-        var saveResult = base.SavingChangesAsync(eventData, result, cancellationToken);
-
-        // 3. AFTER save, we now have the generated IDs (if any) - but AuditLog doesn't need them
-        // Optionally save audit logs in a separate transaction or after the main save
-
-        return saveResult;
+        dbContext.AuditLogs.AddRange(CaptureAuditLogs(context));
     }
 
     private List<AuditLog> CaptureAuditLogs(DbContext? context)
