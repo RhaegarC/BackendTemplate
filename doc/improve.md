@@ -16,7 +16,7 @@ Each finding is broken out into its own file, numbered in priority order.
 | --- | --- | --- | --- | --- | --- |
 | 1 | 🔴 Blocking | Audit | Audit trail cannot persist a row; will fail on `NOT NULL` | [IM-01-Audit.md](archive/IM-01-Audit.md) | Done |
 | 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](archive/IM-02-CORS.md) | Done |
-| 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](IM-03-Credentials.md) | Open |
+| 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](archive/IM-03-Credentials.md) | Done |
 | 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](IM-04-Dockerfile.md) | Open |
 | 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](IM-05-AuthMiddleware.md) | Open |
 | 6 | 🟠 High | Data | `CreateAsync(List<T>)` is fire-and-forget | [IM-06-BatchCreate.md](IM-06-BatchCreate.md) | Open |
@@ -40,7 +40,7 @@ finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workfl
 
 1. **[IM-01](archive/IM-01-Audit.md)** — make `UserContextService` real and the `AuditLog`
    fields honest. Until then the audit trail is decorative and database writes will fail.
-2. **[IM-02](archive/IM-02-CORS.md) and [IM-03](IM-03-Credentials.md)** — fix the CORS separator
+2. **[IM-02](archive/IM-02-CORS.md) and [IM-03](archive/IM-03-Credentials.md)** — fix the CORS separator
    and ports, and move credentials out of `launchSettings.json`. Both are small, and both
    are template-hygiene issues that propagate to every project generated from it.
 3. **[IM-05](IM-05-AuthMiddleware.md) and [IM-06](IM-06-BatchCreate.md)** — decide what

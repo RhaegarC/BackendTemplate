@@ -55,4 +55,4 @@ curl -k -i -X OPTIONS https://localhost:8086/User/index \
 
 ## Related
 
-- [IM-03](../IM-03-Credentials.md) — credentials committed in the same file
+- [IM-03](IM-03-Credentials.md) — credentials committed in the same file
