@@ -3,15 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using Model.DatabaseEntity;
 
-public class TmpContext : DbContext
+public class TmpContext(DbContextOptions<TmpContext> options) : DbContext(options)
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder builder)
-    {
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<User>();
-        base.OnModelCreating(modelBuilder);
-    }
+    public DbSet<User> Users => Set<User>();
 }
