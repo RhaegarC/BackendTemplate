@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Tmp.Interface.Infrastructure;
 using Tmp.Interface.Service;
 using Tmp.Model;
 using Tmp.Repository;

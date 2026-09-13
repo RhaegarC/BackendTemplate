@@ -2,8 +2,8 @@
 
 - **Priority:** 🟠 Medium
 - **Area:** Design
-- **Status:** Open
-- **Index:** [improve.md](improve.md)
+- **Status:** Done
+- **Index:** [improve.md](../improve.md)
 
 ## Problem
 
@@ -19,5 +19,5 @@ assigned — the same fix covers it.
 
 ## Related
 
-- [IM-01](archive/IM-01-Audit.md) — the audit trail depends on this
+- [IM-01](IM-01-Audit.md) — the audit trail depends on this
 - [IM-07](IM-07-Layering.md) — where the interface should live

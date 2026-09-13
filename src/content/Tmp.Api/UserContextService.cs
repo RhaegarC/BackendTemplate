@@ -1,9 +1,16 @@
 namespace Tmp.Api;
 
 using System.Security.Claims;
-using Tmp.Interface.Service;
+using Tmp.Interface.Infrastructure;
 
-public class UserContextService : IUserContextService
+/// <summary>
+/// Reads the acting user and the request context straight from <see cref="HttpContext"/>.
+/// Every member is computed on access rather than captured by the constructor: the service
+/// is scoped, so it describes one request for its whole lifetime, and resolving it outside
+/// a request yields nulls instead of freezing whatever happened to be current at the moment
+/// it was built.
+/// </summary>
+public class UserContextService(IHttpContextAccessor httpContextAccessor) : IUserContextService
 {
     /// <summary>Entra ID's short claim for the object id.</summary>
     private const string ObjectIdClaim = "oid";
@@ -17,73 +24,49 @@ public class UserContextService : IUserContextService
 
     private const string CorrelationIdHeader = "X-Correlation-Id";
 
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private HttpContext? Context => httpContextAccessor.HttpContext;
 
-    public UserContextService(IHttpContextAccessor httpContextAccessor)
+    /// <inheritdoc/>
+    public bool HasActiveRequest => Context is not null;
+
+    /// <inheritdoc/>
+    public string? EntraObjectId =>
+        AuthenticatedUser?.FindFirst(ObjectIdClaim)?.Value
+        ?? AuthenticatedUser?.FindFirst(ObjectIdSchemaClaim)?.Value;
+
+    /// <inheritdoc/>
+    public string? ActorName =>
+        AuthenticatedUser?.FindFirst("name")?.Value
+        ?? AuthenticatedUser?.FindFirst("preferred_username")?.Value;
+
+    /// <inheritdoc/>
+    public string? IpAddress => Context?.Connection.RemoteIpAddress?.ToString();
+
+    /// <inheritdoc/>
+    public string? UserAgent => Context?.Request.Headers.UserAgent.FirstOrDefault();
+
+    /// <inheritdoc/>
+    public string? CorrelationId =>
+        Context?.Request.Headers[CorrelationIdHeader].FirstOrDefault()
+        ?? Context?.TraceIdentifier;
+
+    /// <summary>
+    /// The caller, but only when the token behind them was actually validated. An
+    /// unauthenticated principal carries no claims this app has reason to trust, and the
+    /// audit trail attributes such requests to "anonymous" rather than to a claimed id.
+    /// </summary>
+    private ClaimsPrincipal? AuthenticatedUser
     {
-        _httpContextAccessor = httpContextAccessor;
-        GetCurrentUserInfo();
-    }
-
-    /// <summary>
-    /// Entra Object ID for the user
-    /// </summary>
-    public string? EntraObjectId { get; private set; }
-
-    /// <summary>
-    /// True when this service was resolved inside an HTTP request
-    /// </summary>
-    public bool HasActiveRequest { get; private set; }
-
-    /// <summary>
-    /// Optional: user's display name
-    /// </summary>
-    public string? ActorName { get; set; }
-
-    // Context
-    /// <summary>
-    /// From HTTP context
-    /// </summary>
-    public string? IpAddress { get; set; }
-
-    /// <summary>
-    /// From HTTP context
-    /// </summary>
-    public string? UserAgent { get; set; }
-
-    /// <summary>
-    /// For tracing across services
-    /// </summary>
-    public string? CorrelationId { get; set; }
-
-    private void GetCurrentUserInfo()
-    {
-        HttpContext? httpContext = _httpContextAccessor.HttpContext;
-
-        // No request in flight — startup, or a background job. Everything stays null and
-        // the audit trail attributes the change to "system" rather than to a user.
-        if (httpContext is null)
+        get
         {
-            return;
+            HttpContext? context = Context;
+
+            if (context is null || context.User.Identity?.IsAuthenticated != true)
+            {
+                return null;
+            }
+
+            return context.User;
         }
-
-        HasActiveRequest = true;
-
-        ClaimsPrincipal user = httpContext.User;
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            EntraObjectId = user.FindFirst(ObjectIdClaim)?.Value
-                ?? user.FindFirst(ObjectIdSchemaClaim)?.Value;
-            ActorName = user.FindFirst("name")?.Value
-                ?? user.FindFirst("preferred_username")?.Value;
-        }
-
-        IpAddress = httpContext.Connection.RemoteIpAddress?.ToString();
-        UserAgent = httpContext.Request.Headers.UserAgent.FirstOrDefault();
-
-        // Prefer a caller-supplied id so a trace survives across services; fall back to
-        // ASP.NET's per-request identifier so the column is never empty.
-        CorrelationId = httpContext.Request.Headers[CorrelationIdHeader].FirstOrDefault()
-            ?? httpContext.TraceIdentifier;
     }
 }

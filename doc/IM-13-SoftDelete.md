@@ -21,4 +21,4 @@ rows where needed.
 
 ## Related
 
-- [IM-09](IM-09-AuditLogIndexes.md) — same configuration site
+- [IM-09](archive/IM-09-AuditLogIndexes.md) — same configuration site

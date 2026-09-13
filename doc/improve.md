@@ -20,10 +20,10 @@ Each finding is broken out into its own file, numbered in priority order.
 | 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](archive/IM-04-Dockerfile.md) | Done |
 | 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](archive/IM-05-AuthMiddleware.md) | Done |
 | 6 | 🟠 High | Data | `CreateAsync(List<T>)` is fire-and-forget | [IM-06-BatchCreate.md](archive/IM-06-BatchCreate.md) | Done |
-| 7 | 🟠 Medium | Layering | `Tmp.Repository` depends on `Tmp.Interface.Service` | [IM-07-Layering.md](IM-07-Layering.md) | Open |
-| 8 | 🟠 Medium | Design | Mutable ambient state on `IUserContextService` | [IM-08-UserContext.md](IM-08-UserContext.md) | Open |
-| 9 | 🟠 Medium | Data | `AuditLog` has no indexes; value columns are plain `text` | [IM-09-AuditLogIndexes.md](IM-09-AuditLogIndexes.md) | Open |
-| 10 | 🟠 Medium | Security | Audit snapshots serialize every column, including secrets | [IM-10-AuditRedaction.md](IM-10-AuditRedaction.md) | Open |
+| 7 | 🟠 Medium | Layering | `Tmp.Repository` depends on `Tmp.Interface.Service` | [IM-07-Layering.md](archive/IM-07-Layering.md) | Done |
+| 8 | 🟠 Medium | Design | Mutable ambient state on `IUserContextService` | [IM-08-UserContext.md](archive/IM-08-UserContext.md) | Done |
+| 9 | 🟠 Medium | Data | `AuditLog` has no indexes; value columns are plain `text` | [IM-09-AuditLogIndexes.md](archive/IM-09-AuditLogIndexes.md) | Done |
+| 10 | 🟠 Medium | Security | Audit snapshots serialize every column, including secrets | [IM-10-AuditRedaction.md](archive/IM-10-AuditRedaction.md) | Done |
 | 11 | 🟡 Low | Correctness | Audit only hooks the async save path | [IM-11-AuditSyncPath.md](IM-11-AuditSyncPath.md) | Open |
 | 12 | 🟡 Low | Model | `AuditLog` key strategy inconsistent with `EntityBase` | [IM-12-KeyStrategy.md](IM-12-KeyStrategy.md) | Open |
 | 13 | 🟡 Low | Data | Soft delete written but never enforced | [IM-13-SoftDelete.md](IM-13-SoftDelete.md) | Open |
@@ -45,7 +45,7 @@ finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workfl
    are template-hygiene issues that propagate to every project generated from it.
 3. **[IM-05](archive/IM-05-AuthMiddleware.md) and [IM-06](archive/IM-06-BatchCreate.md)** — decide what
    authentication should be, and fix the fire-and-forget repository call.
-4. **[IM-04](archive/IM-04-Dockerfile.md), [IM-07](IM-07-Layering.md)–[IM-15](IM-15-Cleanup.md)**
+4. **[IM-04](archive/IM-04-Dockerfile.md), [IM-07](archive/IM-07-Layering.md)–[IM-15](IM-15-Cleanup.md)**
    — build correctness and design cleanups.
 
 ## Verification checklist
