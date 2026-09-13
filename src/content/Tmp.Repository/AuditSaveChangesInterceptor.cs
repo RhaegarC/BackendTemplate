@@ -128,16 +128,28 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         return _currentUser.HasActiveRequest ? AnonymousActor : SystemActor;
     }
 
-    private string? GetPrimaryKeyValue(EntityEntry entry)
+    /// <summary>
+    /// The affected row's key, read before the save. That is only possible because keys are
+    /// application-assigned (<see cref="EntityBase.Id"/>), so an insert is as traceable as
+    /// an update — which is the opposite of what a database-generated key allows, since
+    /// there is nothing to read until after the save has already happened.
+    /// </summary>
+    private static string? GetPrimaryKeyValue(EntityEntry entry)
     {
         var key = entry.Metadata.FindPrimaryKey();
-        if (key == null) return null;
+        if (key == null)
+        {
+            return null;
+        }
 
-        var keyValues = key.Properties
+        var values = key.Properties
             .Select(p => entry.Property(p.Name).CurrentValue?.ToString())
-            .Where(v => v != null);
+            .ToArray();
 
-        return string.Join("-", keyValues);
+        // If any part is unset, report no key at all rather than a partial one. Joining
+        // whatever happened to be present would write "abc" for a two-part key whose
+        // second half is missing — a value that reads like a real id and is not one.
+        return values.Any(string.IsNullOrEmpty) ? null : string.Join("-", values);
     }
 
     private string? SerializeEntity(EntityEntry entry, bool isOriginal)

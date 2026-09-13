@@ -28,8 +28,10 @@ public sealed class AuditLog
     public required string TableName { get; set; }
 
     /// <summary>
-    /// Primary key value (as string). Null for an insert whose key the database generates
-    /// — there is nothing to record until after the save completes. See IM-14.
+    /// Primary key value (as string) of the affected row, populated for inserts as well as
+    /// updates and deletes. Keys are application-assigned (see <see cref="EntityBase.Id"/>),
+    /// so the value exists before the save and an insert is as traceable as anything else.
+    /// Null only when the entity has no primary key, or a part of a composite one is unset.
     /// </summary>
     public string? EntityId { get; set; }
 
