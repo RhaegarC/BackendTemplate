@@ -3,9 +3,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Tmp.Interface.Infrastructure;
+using Tmp.Model;
 using Tmp.Model.DatabaseEntity;
 
 internal sealed class AuditSaveChangesInterceptor(IUserContextService userContextService) : SaveChangesInterceptor
@@ -132,6 +135,7 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         // Clone the entity's properties to a dictionary
         var properties = entry.Metadata.GetProperties()
             .Where(p => !p.IsShadowProperty()) // Skip EF shadow properties
+            .Where(p => !IsNotAudited(p))      // Skip properties opted out of the snapshot
             .ToDictionary(
                 p => p.Name,
                 p => isOriginal
@@ -139,12 +143,17 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
                     : entry.Property(p.Name).CurrentValue
             );
 
-        // Exclude sensitive fields (optional)
-        // properties.Remove("PasswordHash");
-        // properties.Remove("RefreshToken");
-
         return JsonSerializer.Serialize(properties, _jsonOptions);
     }
+
+    /// <summary>
+    /// <see cref="NotAuditedAttribute"/> sits on the CLR property, and an EF property only
+    /// has a <see cref="IProperty.PropertyInfo"/> when it is mapped to one. A shadow
+    /// property has none, so it cannot be opted out this way — which is fine, since a
+    /// shadow property has no CLR value to leak.
+    /// </summary>
+    private static bool IsNotAudited(IProperty property) =>
+        property.PropertyInfo?.GetCustomAttribute<NotAuditedAttribute>(inherit: true) is not null;
 
     private string? GetChangedColumns(EntityEntry entry)
     {
