@@ -1,4 +1,4 @@
-﻿namespace Tmp.Interface.Service;
+﻿namespace Tmp.Interface.Infrastructure;
 
 public interface IUserContextService
 {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Tmp.Interface.Service;
+using Tmp.Interface.Infrastructure;
 using Tmp.Model.DatabaseEntity;
 
 internal sealed class AuditSaveChangesInterceptor(IUserContextService userContextService) : SaveChangesInterceptor

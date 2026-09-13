@@ -1,7 +1,7 @@
 namespace Tmp.Api;
 
 using System.Security.Claims;
-using Tmp.Interface.Service;
+using Tmp.Interface.Infrastructure;
 
 public class UserContextService : IUserContextService
 {
