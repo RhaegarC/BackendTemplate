@@ -15,7 +15,7 @@ Each finding is broken out into its own file, numbered in priority order.
 | # | Priority | Area | Issue | File | Status |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 🔴 Blocking | Audit | Audit trail cannot persist a row; will fail on `NOT NULL` | [IM-01-Audit.md](archive/IM-01-Audit.md) | Done |
-| 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](IM-02-CORS.md) | Open |
+| 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](archive/IM-02-CORS.md) | Done |
 | 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](IM-03-Credentials.md) | Open |
 | 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](IM-04-Dockerfile.md) | Open |
 | 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](IM-05-AuthMiddleware.md) | Open |
@@ -40,7 +40,7 @@ finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workfl
 
 1. **[IM-01](archive/IM-01-Audit.md)** — make `UserContextService` real and the `AuditLog`
    fields honest. Until then the audit trail is decorative and database writes will fail.
-2. **[IM-02](IM-02-CORS.md) and [IM-03](IM-03-Credentials.md)** — fix the CORS separator
+2. **[IM-02](archive/IM-02-CORS.md) and [IM-03](IM-03-Credentials.md)** — fix the CORS separator
    and ports, and move credentials out of `launchSettings.json`. Both are small, and both
    are template-hygiene issues that propagate to every project generated from it.
 3. **[IM-05](IM-05-AuthMiddleware.md) and [IM-06](IM-06-BatchCreate.md)** — decide what
@@ -50,22 +50,35 @@ finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workfl
 
 ## Verification checklist
 
-Any change here should be checked with the following, which is what caught
-[IM-02](IM-02-CORS.md):
+Any change here should be checked with the following. The CORS check covers **both** launch
+profiles — a single-profile version is what let [IM-02](archive/IM-02-CORS.md) through:
 
 ```bash
 # Build
 dotnet build src/content/Tmp.slnx
 
-# Run WITH the launch profile (the default path — do not use --no-launch-profile here)
+# Run WITH the launch profile (the default path — do not use --no-launch-profile here).
+# `dotnet run` picks the first profile, "http".
 ASPNETCORE_ENVIRONMENT=Development dotnet run --project src/content/Tmp.Api
 
 # Health (audit renamed this path from /api/health)
 curl -i http://localhost:8080/health
 
-# CORS preflight from a configured origin — must return Access-Control-Allow-Origin
+# CORS preflight, default "http" profile — must return Access-Control-Allow-Origin.
 curl -i -X OPTIONS http://localhost:8080/User/index \
   -H "Origin: http://localhost:8080" -H "Access-Control-Request-Method: GET"
+
+# CORS preflight, "https" profile. This is a DIFFERENT configuration path: it takes
+# AllowedOrigins from launchSettings.json (an env var) rather than appsettings, which is
+# exactly what IM-02 broke. Checking only the http profile cannot detect that.
+# Target 8086, not 8080: UseHttpsRedirection runs before UseCors, so an http request is
+# answered with a 307 carrying no CORS headers and looks like a failure either way.
+ASPNETCORE_ENVIRONMENT=Development dotnet run --project src/content/Tmp.Api --launch-profile https
+curl -k -i -X OPTIONS https://localhost:8086/User/index \
+  -H "Origin: https://localhost:8086" -H "Access-Control-Request-Method: GET"
+# and an unlisted origin must NOT receive the header
+curl -k -i -X OPTIONS https://localhost:8086/User/index \
+  -H "Origin: https://evil.example" -H "Access-Control-Request-Method: GET"
 
 # DI chain resolves end to end (IUserService -> IUserRepository -> TmpContext)
 curl -i http://localhost:8080/User/index

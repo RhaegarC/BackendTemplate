@@ -2,8 +2,8 @@
 
 - **Priority:** 🔴 Blocking
 - **Area:** CORS
-- **Status:** Open
-- **Index:** [improve.md](improve.md)
+- **Status:** Done
+- **Index:** [improve.md](../improve.md)
 
 ## Problem
 
@@ -34,14 +34,25 @@ Choose one separator and use it everywhere. Comma is the natural fit for
 ## Verification
 
 ```bash
-# Run WITH the launch profile — do not use --no-launch-profile here
-ASPNETCORE_ENVIRONMENT=Development dotnet run --project src/content/Tmp.Api
+# Run WITH the launch profile — do not use --no-launch-profile here. Name the profile
+# explicitly: it decides both the ports and whether AllowedOrigins comes from
+# launchSettings.json (https) or appsettings (http).
+ASPNETCORE_ENVIRONMENT=Development dotnet run --project src/content/Tmp.Api --launch-profile https
 
-curl -i -X OPTIONS http://localhost:8080/User/index \
-  -H "Origin: http://localhost:8080" -H "Access-Control-Request-Method: GET"
+# Target https://localhost:8086, NOT http://localhost:8080. UseHttpsRedirection runs
+# before UseCors, so an http request is answered with a 307 carrying no CORS headers —
+# indistinguishable from a broken policy. An earlier revision of this recipe named 8080,
+# which fails under this profile even when the policy is correct.
+curl -k -i -X OPTIONS https://localhost:8086/User/index \
+  -H "Origin: https://localhost:8086" -H "Access-Control-Request-Method: GET"
 # must return Access-Control-Allow-Origin
+
+# Negative control — an unlisted origin must NOT receive the header. Without this,
+# a policy that simply allows everything looks identical to a correct one.
+curl -k -i -X OPTIONS https://localhost:8086/User/index \
+  -H "Origin: https://evil.example" -H "Access-Control-Request-Method: GET"
 ```
 
 ## Related
 
-- [IM-03](IM-03-Credentials.md) — credentials committed in the same file
+- [IM-03](../IM-03-Credentials.md) — credentials committed in the same file

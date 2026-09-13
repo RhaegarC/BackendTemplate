@@ -22,4 +22,4 @@ template has been shared.
 
 ## Related
 
-- [IM-02](IM-02-CORS.md) — separator mismatch in the same file
+- [IM-02](archive/IM-02-CORS.md) — separator mismatch in the same file
