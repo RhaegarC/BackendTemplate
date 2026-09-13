@@ -5,15 +5,13 @@ public static class Constant
     public static class App
     {
         public const string CORSPolicyName = "AllowSpecificOrigin";
-        public const string HealthCheckUrl = "/api/health";
+        public const string HealthCheckUrl = "/health";
         public const string SwaggerUrl = "/swagger";
     }
 
     public static class Message
     {
-        public const string NoDBConnection = "Database connection not configured.";
-        
-        public const string NoTenantId = "Tenant id not configured.";
+        public const string NoAllowedOrigins = "Allowed origins not configured. Set the 'AllowedOrigins' configuration value (comma-separated).";
 
         public const string Unauthorized = "Unauthorized.";
     }

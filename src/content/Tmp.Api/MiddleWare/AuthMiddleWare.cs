@@ -9,7 +9,7 @@ internal sealed class AuthMiddleWare(RequestDelegate next, ILogger<AuthMiddleWar
     {
         try
         {
-            await next(context);
+            // TODO: Implement authentication logic here
         }
         catch (Exception ex)
         {
