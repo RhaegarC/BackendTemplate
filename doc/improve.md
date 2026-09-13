@@ -12,23 +12,29 @@ Each finding is broken out into its own file, numbered in priority order.
 
 ## Findings
 
-| # | Priority | Area | Issue | File |
-| --- | --- | --- | --- | --- |
-| 1 | 🔴 Blocking | Audit | Audit trail cannot persist a row; will fail on `NOT NULL` | [IM-01-Audit.md](IM-01-Audit.md) |
-| 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](IM-02-CORS.md) |
-| 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](IM-03-Credentials.md) |
-| 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](IM-04-Dockerfile.md) |
-| 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](IM-05-AuthMiddleware.md) |
-| 6 | 🟠 High | Data | `CreateAsync(List<T>)` is fire-and-forget | [IM-06-BatchCreate.md](IM-06-BatchCreate.md) |
-| 7 | 🟠 Medium | Layering | `Tmp.Repository` depends on `Tmp.Interface.Service` | [IM-07-Layering.md](IM-07-Layering.md) |
-| 8 | 🟠 Medium | Design | Mutable ambient state on `IUserContextService` | [IM-08-UserContext.md](IM-08-UserContext.md) |
-| 9 | 🟠 Medium | Data | `AuditLog` has no indexes; value columns are plain `text` | [IM-09-AuditLogIndexes.md](IM-09-AuditLogIndexes.md) |
-| 10 | 🟠 Medium | Security | Audit snapshots serialize every column, including secrets | [IM-10-AuditRedaction.md](IM-10-AuditRedaction.md) |
-| 11 | 🟡 Low | Correctness | Audit only hooks the async save path | [IM-11-AuditSyncPath.md](IM-11-AuditSyncPath.md) |
-| 12 | 🟡 Low | Model | `AuditLog` key strategy inconsistent with `EntityBase` | [IM-12-KeyStrategy.md](IM-12-KeyStrategy.md) |
-| 13 | 🟡 Low | Data | Soft delete written but never enforced | [IM-13-SoftDelete.md](IM-13-SoftDelete.md) |
-| 14 | 🟡 Low | Data | `EntityId` null for DB-generated keys on insert | [IM-14-EntityId.md](IM-14-EntityId.md) |
-| 15 | 🟡 Low | Cleanup | Unused `Constant.App.SwaggerUrl`; no tests or CI | [IM-15-Cleanup.md](IM-15-Cleanup.md) |
+| # | Priority | Area | Issue | File | Status |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 🔴 Blocking | Audit | Audit trail cannot persist a row; will fail on `NOT NULL` | [IM-01-Audit.md](IM-01-Audit.md) | Open |
+| 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](IM-02-CORS.md) | Open |
+| 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](IM-03-Credentials.md) | Open |
+| 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](IM-04-Dockerfile.md) | Open |
+| 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](IM-05-AuthMiddleware.md) | Open |
+| 6 | 🟠 High | Data | `CreateAsync(List<T>)` is fire-and-forget | [IM-06-BatchCreate.md](IM-06-BatchCreate.md) | Open |
+| 7 | 🟠 Medium | Layering | `Tmp.Repository` depends on `Tmp.Interface.Service` | [IM-07-Layering.md](IM-07-Layering.md) | Open |
+| 8 | 🟠 Medium | Design | Mutable ambient state on `IUserContextService` | [IM-08-UserContext.md](IM-08-UserContext.md) | Open |
+| 9 | 🟠 Medium | Data | `AuditLog` has no indexes; value columns are plain `text` | [IM-09-AuditLogIndexes.md](IM-09-AuditLogIndexes.md) | Open |
+| 10 | 🟠 Medium | Security | Audit snapshots serialize every column, including secrets | [IM-10-AuditRedaction.md](IM-10-AuditRedaction.md) | Open |
+| 11 | 🟡 Low | Correctness | Audit only hooks the async save path | [IM-11-AuditSyncPath.md](IM-11-AuditSyncPath.md) | Open |
+| 12 | 🟡 Low | Model | `AuditLog` key strategy inconsistent with `EntityBase` | [IM-12-KeyStrategy.md](IM-12-KeyStrategy.md) | Open |
+| 13 | 🟡 Low | Data | Soft delete written but never enforced | [IM-13-SoftDelete.md](IM-13-SoftDelete.md) | Open |
+| 14 | 🟡 Low | Data | `EntityId` null for DB-generated keys on insert | [IM-14-EntityId.md](IM-14-EntityId.md) | Open |
+| 15 | 🟡 Low | Cleanup | Unused `Constant.App.SwaggerUrl`; no tests or CI | [IM-15-Cleanup.md](IM-15-Cleanup.md) | Open |
+
+**Status values:** `Open` → `In Progress` → `Done`. Nothing in this review has been
+addressed yet, so every finding is `Open`. Set a finding to `Done` only once its fix has
+merged into `develop` — not when it is merely written. Each finding's own file carries a
+matching `**Status:**` line in its header; update that line and this table together, or the
+index and the detail will disagree about what is finished.
 
 ## Suggested order of work
 
