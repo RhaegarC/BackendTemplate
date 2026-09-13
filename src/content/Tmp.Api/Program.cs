@@ -11,10 +11,12 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-// Register dependence
-builder.Services.RegistService();
+// Register dependence. Configuration is read here, at the composition root: IConfiguration
+// layers environment variables over appsettings.json, so the flat keys below keep their
+// existing env var names and deployments need no changes.
+builder.Services.RegistService(builder.Configuration[Constant.ConfigKey.DBCon]);
 builder.Services.AddScoped<IUserContextService, UserContextService>();
-builder.Services.AllowCORS();
+builder.Services.AllowCORS(builder.Configuration);
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
