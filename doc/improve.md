@@ -17,7 +17,7 @@ Each finding is broken out into its own file, numbered in priority order.
 | 1 | 🔴 Blocking | Audit | Audit trail cannot persist a row; will fail on `NOT NULL` | [IM-01-Audit.md](archive/IM-01-Audit.md) | Done |
 | 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](archive/IM-02-CORS.md) | Done |
 | 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](archive/IM-03-Credentials.md) | Done |
-| 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](IM-04-Dockerfile.md) | Open |
+| 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](archive/IM-04-Dockerfile.md) | Done |
 | 5 | 🟠 High | Auth | `AuthMiddleWare` is a pass-through with dead error handling | [IM-05-AuthMiddleware.md](IM-05-AuthMiddleware.md) | Open |
 | 6 | 🟠 High | Data | `CreateAsync(List<T>)` is fire-and-forget | [IM-06-BatchCreate.md](IM-06-BatchCreate.md) | Open |
 | 7 | 🟠 Medium | Layering | `Tmp.Repository` depends on `Tmp.Interface.Service` | [IM-07-Layering.md](IM-07-Layering.md) | Open |
@@ -45,7 +45,7 @@ finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workfl
    are template-hygiene issues that propagate to every project generated from it.
 3. **[IM-05](IM-05-AuthMiddleware.md) and [IM-06](IM-06-BatchCreate.md)** — decide what
    authentication should be, and fix the fire-and-forget repository call.
-4. **[IM-04](IM-04-Dockerfile.md), [IM-07](IM-07-Layering.md)–[IM-15](IM-15-Cleanup.md)**
+4. **[IM-04](archive/IM-04-Dockerfile.md), [IM-07](IM-07-Layering.md)–[IM-15](IM-15-Cleanup.md)**
    — build correctness and design cleanups.
 
 ## Verification checklist
