@@ -5,9 +5,10 @@ public class AuditLog
     public int Id { get; set; }
 
     /// <summary>
-    /// Entra Object ID
+    /// Entra Object ID of whoever made the change, or "system" for background work and
+    /// "anonymous" for an unauthenticated request. Never null.
     /// </summary>
-    public string Actor { get; set; }
+    public required string Actor { get; set; }
 
     /// <summary>
     /// Optional: user's display name
@@ -15,19 +16,20 @@ public class AuditLog
     public string? ActorName { get; set; }
 
     /// <summary>
-    /// "Users", "Orders", etc.
+    /// "Users", "Orders", etc. Never null.
     /// </summary>
-    public string TableName { get; set; }
-    
+    public required string TableName { get; set; }
+
     /// <summary>
-    /// Primary key value (as string)
+    /// Primary key value (as string). Null for an insert whose key the database generates
+    /// — there is nothing to record until after the save completes. See IM-14.
     /// </summary>
-    public string EntityId { get; set; }
-    
+    public string? EntityId { get; set; }
+
     /// <summary>
-    /// "INSERT", "UPDATE", "DELETE"
+    /// "INSERT", "UPDATE", "DELETE". Never null.
     /// </summary>
-    public string Action { get; set; }
+    public required string Action { get; set; }
 
     /// <summary>
     /// JSON of before-state (or null for INSERT)

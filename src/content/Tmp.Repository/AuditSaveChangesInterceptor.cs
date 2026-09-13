@@ -10,6 +10,12 @@ using Tmp.Model.DatabaseEntity;
 
 internal sealed class AuditSaveChangesInterceptor(IUserContextService userContextService) : SaveChangesInterceptor
 {
+    /// <summary>Attribution for work with no request behind it — startup, background jobs.</summary>
+    private const string SystemActor = "system";
+
+    /// <summary>Attribution for a request that arrived without an authenticated user.</summary>
+    private const string AnonymousActor = "anonymous";
+
     private readonly IUserContextService _currentUser = userContextService;
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -46,7 +52,7 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
 
         var logs = new List<AuditLog>();
         var now = DateTimeOffset.UtcNow;
-        var actor = _currentUser.EntraObjectId;
+        var actor = ResolveActor();
 
         foreach (var entry in context.ChangeTracker.Entries())
         {
@@ -54,7 +60,11 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
 
             if (entry.State == EntityState.Unchanged) continue;
 
-            var tableName = entry.Metadata.GetTableName() ?? entry.Metadata.GetDefaultTableName();
+            // The mapped table name is absent for a type that has no table — the column is
+            // NOT NULL, so fall back to the CLR type name rather than writing null.
+            var tableName = entry.Metadata.GetTableName()
+                ?? entry.Metadata.GetDefaultTableName()
+                ?? entry.Metadata.ClrType.Name;
             var entityId = GetPrimaryKeyValue(entry);
 
             var oldValues = entry.State == EntityState.Added
@@ -85,6 +95,24 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         }
 
         return logs;
+    }
+
+    /// <summary>
+    /// <see cref="AuditLog.Actor"/> is NOT NULL, so an unidentified caller still needs a
+    /// value. A request that arrived unauthenticated and work that ran with no request at
+    /// all are different problems — the first is a missing token, the second is expected —
+    /// so they get different actors rather than one shared "unknown".
+    /// </summary>
+    private string ResolveActor()
+    {
+        string? actor = _currentUser.EntraObjectId;
+
+        if (!string.IsNullOrWhiteSpace(actor))
+        {
+            return actor;
+        }
+
+        return _currentUser.HasActiveRequest ? AnonymousActor : SystemActor;
     }
 
     private string? GetPrimaryKeyValue(EntityEntry entry)
