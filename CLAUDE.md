@@ -45,8 +45,10 @@ This project is indexed by GitNexus as **BackendTemplate** (132 symbols, 177 rel
 
 ## Git workflow
 
-Follow the six-step branch lifecycle in [doc/git-workflow.md](doc/git-workflow.md) for every
+Follow the seven-step branch lifecycle in [doc/git-workflow.md](doc/git-workflow.md) for every
 implementation or bug fix: branch from `develop`, make the change, commit locally and wait for
-review, push and PR into `develop`, then sync `develop` and delete the local branch.
+review, then archive the task file and mark it `Done`, push and PR into `develop`, sync
+`develop`, and delete the local branch. Run the whole cycle with
+[`/implement`](.claude/commands/implement.md) `<task-file>`.
 
 Never commit directly to `develop` or `master`.
