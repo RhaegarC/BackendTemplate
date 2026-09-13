@@ -9,5 +9,16 @@
   "tags": {
     "language": "C#",
     "type": "solution"
+  },
+  "symbols": {
+    "userSecretsId": {
+      "type": "generated",
+      "generator": "guid",
+      "replaces": "USER_SECRETS_ID",
+      "parameters": {
+        "defaultFormat": "D"
+      },
+      "description": "A fresh GUID for UserSecretsId, so each generated project gets its own user-secrets store instead of sharing one across every project made from this template."
+    }
   }
 }

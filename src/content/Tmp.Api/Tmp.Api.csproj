@@ -4,6 +4,16 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Names this project's user-secrets store. Local dev values live there, never in the
+         repo. The template engine replaces the placeholder with a fresh GUID on
+         `dotnet new`, so two projects from this template do not share one store.
+           dotnet user-secrets set "DbConnection" "Server=localhost;Database=Tmp;Uid=<user>;Pwd=<password>;"
+
+         launchSettings.json deliberately carries no DbConnection or TenantId: it is
+         version-controlled, so committing them hands every clone the same credentials.
+         The note lives here rather than there because the SDK parses launchSettings.json
+         as strict JSON and refuses to start if it contains a comment. -->
+    <UserSecretsId>USER_SECRETS_ID</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
