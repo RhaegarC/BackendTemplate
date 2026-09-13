@@ -19,7 +19,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DbConnection": "Server=localhost;Database=Tmp;Uid=postgres;Pwd=postgres;",
         "TenantId": "3f18e889-b0e4-41ae-ad36-7d2f73d416ff",
-        "AllowedOrigins": "https://localhost:8086;http://localhost:8080"
+        "AllowedOrigins": "https://localhost:8086,http://localhost:8080"
       }
     }
   }
