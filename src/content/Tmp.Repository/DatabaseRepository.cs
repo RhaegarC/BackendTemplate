@@ -35,7 +35,17 @@ public class DatabaseRepository(TmpContext context) : IDbRepository
     /// <inheritdoc/>
     public async Task<int> CreateAsync<T>(List<T> items)
     {
-        items.ForEach(async item => await _context.AddAsync(item ?? throw new Exception()));
+        // A plain foreach, not List<T>.ForEach: that takes an Action<T>, so an async lambda
+        // is async void -- nothing awaits it and SaveChangesAsync can run before the adds
+        // finish, persisting a partial batch.
+        ArgumentNullException.ThrowIfNull(items, nameof(items));
+
+        foreach (T item in items)
+        {
+            ArgumentNullException.ThrowIfNull(item, nameof(item));
+            await _context.AddAsync(item);
+        }
+
         int count = await _context.SaveChangesAsync();
         return count;
     }
