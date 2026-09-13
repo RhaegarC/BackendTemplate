@@ -24,11 +24,11 @@ Each finding is broken out into its own file, numbered in priority order.
 | 8 | 🟠 Medium | Design | Mutable ambient state on `IUserContextService` | [IM-08-UserContext.md](archive/IM-08-UserContext.md) | Done |
 | 9 | 🟠 Medium | Data | `AuditLog` has no indexes; value columns are plain `text` | [IM-09-AuditLogIndexes.md](archive/IM-09-AuditLogIndexes.md) | Done |
 | 10 | 🟠 Medium | Security | Audit snapshots serialize every column, including secrets | [IM-10-AuditRedaction.md](archive/IM-10-AuditRedaction.md) | Done |
-| 11 | 🟡 Low | Correctness | Audit only hooks the async save path | [IM-11-AuditSyncPath.md](IM-11-AuditSyncPath.md) | Open |
-| 12 | 🟡 Low | Model | `AuditLog` key strategy inconsistent with `EntityBase` | [IM-12-KeyStrategy.md](IM-12-KeyStrategy.md) | Open |
-| 13 | 🟡 Low | Data | Soft delete written but never enforced | [IM-13-SoftDelete.md](IM-13-SoftDelete.md) | Open |
-| 14 | 🟡 Low | Data | `EntityId` null for DB-generated keys on insert | [IM-14-EntityId.md](IM-14-EntityId.md) | Open |
-| 15 | 🟡 Low | Cleanup | Unused `Constant.App.SwaggerUrl`; no tests or CI | [IM-15-Cleanup.md](IM-15-Cleanup.md) | Open |
+| 11 | 🟡 Low | Correctness | Audit only hooks the async save path | [IM-11-AuditSyncPath.md](archive/IM-11-AuditSyncPath.md) | Done |
+| 12 | 🟡 Low | Model | `AuditLog` key strategy inconsistent with `EntityBase` | [IM-12-KeyStrategy.md](archive/IM-12-KeyStrategy.md) | Done |
+| 13 | 🟡 Low | Data | Soft delete written but never enforced | [IM-13-SoftDelete.md](archive/IM-13-SoftDelete.md) | Done |
+| 14 | 🟡 Low | Data | `EntityId` null for DB-generated keys on insert | [IM-14-EntityId.md](archive/IM-14-EntityId.md) | Done |
+| 15 | 🟡 Low | Cleanup | Unused `Constant.App.SwaggerUrl`; no tests or CI | [IM-15-Cleanup.md](archive/IM-15-Cleanup.md) | Done |
 
 **Status values:** `Open` → `In Progress` → `Done`. Set a finding to `Done` only once its
 fix has merged into `develop` — not when it is merely written. Each finding's own file
@@ -45,7 +45,7 @@ finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workfl
    are template-hygiene issues that propagate to every project generated from it.
 3. **[IM-05](archive/IM-05-AuthMiddleware.md) and [IM-06](archive/IM-06-BatchCreate.md)** — decide what
    authentication should be, and fix the fire-and-forget repository call.
-4. **[IM-04](archive/IM-04-Dockerfile.md), [IM-07](archive/IM-07-Layering.md)–[IM-15](IM-15-Cleanup.md)**
+4. **[IM-04](archive/IM-04-Dockerfile.md), [IM-07](archive/IM-07-Layering.md)–[IM-15](archive/IM-15-Cleanup.md)**
    — build correctness and design cleanups.
 
 ## Verification checklist
