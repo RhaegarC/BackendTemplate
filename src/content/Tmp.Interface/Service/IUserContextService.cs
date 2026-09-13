@@ -3,9 +3,16 @@
 public interface IUserContextService
 {
     /// <summary>
-    /// Entra Object ID for the user
+    /// Entra Object ID for the user. Null when the request is unauthenticated, or when
+    /// there is no request in flight at all.
     /// </summary>
     string? EntraObjectId { get; }
+
+    /// <summary>
+    /// True when this service was resolved inside an HTTP request. False for startup and
+    /// background work, which have no request to attribute a change to.
+    /// </summary>
+    bool HasActiveRequest { get; }
 
     /// <summary>
     /// Optional: user's display name

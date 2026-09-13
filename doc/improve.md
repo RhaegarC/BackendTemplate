@@ -6,7 +6,7 @@
   `refactor/config-to-iconfiguration` (the `IConfiguration` refactor) into the
   audit-trail work.
 - **Build state at review:** succeeds, 0 errors, **7 warnings** — all 7 are symptoms
-  of [IM-01](IM-01-Audit.md), not noise.
+  of [IM-01](archive/IM-01-Audit.md), not noise.
 
 Each finding is broken out into its own file, numbered in priority order.
 
@@ -14,7 +14,7 @@ Each finding is broken out into its own file, numbered in priority order.
 
 | # | Priority | Area | Issue | File | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 🔴 Blocking | Audit | Audit trail cannot persist a row; will fail on `NOT NULL` | [IM-01-Audit.md](IM-01-Audit.md) | Open |
+| 1 | 🔴 Blocking | Audit | Audit trail cannot persist a row; will fail on `NOT NULL` | [IM-01-Audit.md](archive/IM-01-Audit.md) | Done |
 | 2 | 🔴 Blocking | CORS | `AllowedOrigins` separator mismatch; all origins rejected | [IM-02-CORS.md](IM-02-CORS.md) | Open |
 | 3 | 🔴 High | Security | DB credentials committed in `launchSettings.json` | [IM-03-Credentials.md](IM-03-Credentials.md) | Open |
 | 4 | 🔴 High | Build | `Dockerfile` references a non-existent project | [IM-04-Dockerfile.md](IM-04-Dockerfile.md) | Open |
@@ -30,15 +30,15 @@ Each finding is broken out into its own file, numbered in priority order.
 | 14 | 🟡 Low | Data | `EntityId` null for DB-generated keys on insert | [IM-14-EntityId.md](IM-14-EntityId.md) | Open |
 | 15 | 🟡 Low | Cleanup | Unused `Constant.App.SwaggerUrl`; no tests or CI | [IM-15-Cleanup.md](IM-15-Cleanup.md) | Open |
 
-**Status values:** `Open` → `In Progress` → `Done`. Nothing in this review has been
-addressed yet, so every finding is `Open`. Set a finding to `Done` only once its fix has
-merged into `develop` — not when it is merely written. Each finding's own file carries a
-matching `**Status:**` line in its header; update that line and this table together, or the
-index and the detail will disagree about what is finished.
+**Status values:** `Open` → `In Progress` → `Done`. Set a finding to `Done` only once its
+fix has merged into `develop` — not when it is merely written. Each finding's own file
+carries a matching `**Status:**` line in its header; update that line and this table
+together, or the index and the detail will disagree about what is finished. A `Done`
+finding's file moves to [`archive/`](archive/), per [git-workflow.md](git-workflow.md).
 
 ## Suggested order of work
 
-1. **[IM-01](IM-01-Audit.md)** — make `UserContextService` real and the `AuditLog`
+1. **[IM-01](archive/IM-01-Audit.md)** — make `UserContextService` real and the `AuditLog`
    fields honest. Until then the audit trail is decorative and database writes will fail.
 2. **[IM-02](IM-02-CORS.md) and [IM-03](IM-03-Credentials.md)** — fix the CORS separator
    and ports, and move credentials out of `launchSettings.json`. Both are small, and both
