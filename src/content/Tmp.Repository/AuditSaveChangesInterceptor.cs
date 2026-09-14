@@ -52,7 +52,7 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
             return;
         }
 
-        var now = DateTime.Now;
+        var now = DateTimeOffset.UtcNow;
         var actor = ResolveActor();
 
         foreach (var entry in context.ChangeTracker.Entries<EntityBase>())
@@ -62,6 +62,7 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
                 case EntityState.Added:
                     entry.Entity.CreatedOn = now;
                     entry.Entity.CreatedBy ??= actor;
+                    entry.Entity.IsDeleted = false;
                     break;
                 case EntityState.Modified:
                     entry.Entity.LastModifiedOn = now;
