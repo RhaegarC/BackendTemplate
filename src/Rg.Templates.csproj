@@ -31,7 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**" />
+    <!-- .idea is excluded explicitly because NoDefaultExcludes turns off the SDK's own
+         dot-file skip, and pack does not read .gitignore. Without this the IDE's
+         workspace.xml (absolute paths, recent files, local history) is packed and
+         published, and every project generated from the template inherits it. -->
+    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**;content\**\.idea\**" />
     <Compile Remove="**\*" />
   </ItemGroup>
 

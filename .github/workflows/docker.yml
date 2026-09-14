@@ -1,0 +1,26 @@
+name: Docker image
+
+# IM-04: src/content/Dockerfile referenced a project that no longer existed and
+# 8.0 base images against a net10.0 target, and nothing built it, so it rotted
+# silently through a rename. This builds it on every change so a stale path or
+# base-image tag fails here instead of on a deploy.
+
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+    branches: [develop, master]
+
+  # Lets the image be rebuilt by hand from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build the image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The Dockerfile does `COPY . .`, so the build context is src/content.
+      - name: Build
+        run: docker build -f src/content/Dockerfile -t backend-template:ci src/content
