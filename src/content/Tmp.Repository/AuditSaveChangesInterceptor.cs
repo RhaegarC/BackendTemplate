@@ -30,6 +30,7 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         DbContextEventData eventData,
         InterceptionResult<int> result)
     {
+        Apply(eventData.Context);
         Capture(eventData.Context);
         return base.SavingChanges(eventData, result);
     }
@@ -39,8 +40,35 @@ internal sealed class AuditSaveChangesInterceptor(IUserContextService userContex
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
+        Apply(eventData.Context);
         Capture(eventData.Context);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
+
+    private void Apply(DbContext? context)
+    {
+        if (context is null)
+        {
+            return;
+        }
+
+        var now = DateTime.Now;
+        var actor = ResolveActor();
+
+        foreach (var entry in context.ChangeTracker.Entries<EntityBase>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.CreatedOn = now;
+                    entry.Entity.CreatedBy ??= actor;
+                    break;
+                case EntityState.Modified:
+                    entry.Entity.LastModifiedOn = now;
+                    entry.Entity.LastModifiedBy = actor;
+                    break;
+            }
+        }
     }
 
     /// <summary>
