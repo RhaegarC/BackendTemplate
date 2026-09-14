@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using Tmp.Interface.Repository;
 using Tmp.Model.DatabaseEntity;
 
-public class DatabaseRepository(TmpContext context) : IDbRepository
+public abstract class DatabaseRepository(TmpContext context) : IDbRepository
 {
     private readonly TmpContext _context = context;
 

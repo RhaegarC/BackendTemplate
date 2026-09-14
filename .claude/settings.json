@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet test *)",
+      "mcp__gitnexus__impact",
+      "mcp__gitnexus__list_repos",
+      "Bash(git checkout *)",
+      "Bash(dotnet build *)",
+      "Bash(npm --version)",
+      "Bash(timeout 240 npx --yes gitnexus@latest analyze --index-only)",
+      "Bash(echo \"EXIT:$?\")",
+      "mcp__gitnexus__detect_changes",
+      "Bash(git check-ignore *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Add GET /user/me to fetch or provision the caller'\\\\''s record *)"
+    ]
+  }
+}
