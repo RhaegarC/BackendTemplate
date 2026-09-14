@@ -8,7 +8,7 @@ public abstract class EntityBase
     /// EntityId for an insert, and what lets a caller key its own response on the id
     /// without waiting for the database to hand one back.
     /// </summary>
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string? Id { get; set; }
 
     public string? CreatedBy { get; set; }
 
