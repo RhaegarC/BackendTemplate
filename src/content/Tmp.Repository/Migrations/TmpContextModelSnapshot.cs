@@ -8,7 +8,7 @@ using Tmp.Repository;
 
 #nullable disable
 
-namespace tmp.repository.Migrations
+namespace Tmp.Repository.Migrations
 {
     [DbContext(typeof(TmpContext))]
     partial class TmpContextModelSnapshot : ModelSnapshot
